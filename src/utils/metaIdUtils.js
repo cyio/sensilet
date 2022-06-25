@@ -1,3 +1,5 @@
+const httpUtils = require('../utils/httpUtils');
+
 let metaIdUtils = {};
 
 /* metaId 协议 https://www.metaid.io/meta_protocol
@@ -47,23 +49,24 @@ metaIdUtils.buildMetaData = function (publicKey, parentTxid, node_name, data = '
     ]
 }
 
-function send(privateKey, data) {
-    return new Promise((resolve, reject) => {
-        // console.log(data);
-        // return resolve();
-        datapay.send({
-            safe: true,
-            data,
-            pay: {key: privateKey,feeb:1}
-        }, (err, txid) => {
-            // console.log(err);
-            // console.log(txid);
-            if (err)
-                return reject(err);
-            resolve(txid);
-        })
-    })
+async function send(data) {
+    let txid = (await walletManager.sendOpReturn(data)).tx.id;
+    return txid;
 }
+
+async function getNewNodePath() {
+    // 应该缓存下来，本地 +1，数据更新不及时
+    const url = 'https://api.showmoney.app/serviceapi/api/v1/showService/getPublicKeyForNewNode'
+    const para = {
+        xpub: 'xpub6C1RiQdafRycidKtPDAbWic7qZ5Jz94oA8bHoFjHL3JcsGGR8kuGhP8Co1Jf7zaNinyg9wehnDXcx8xgCdg7sx6XFWyL1moBoMSxPLyvjHu',
+        parentTxId: '3779ae62f71153f0aea1fb97bbe84e0f5c86063bd157b5d361f2e26f400a0022',
+        count: 10
+    }
+    const res = await httpUtils.post(url, { data: JSON.stringify(para) })
+    return res.result.data[0]
+}
+
+metaIdUtils.getNewNodePath = getNewNodePath;
 
 function readFile(path){
     return new  Promise(((resolve, reject) => {
@@ -162,5 +165,26 @@ metaIdUtils.createMetaId = async function (gid) {
     // let blogTxid = await send(privateKey, buildMetaData("03cb33f283e0e185aebc41c1ebd55b43f9775c76c1472525dde7e1aa97f850f538", protocolsTxid, "SimpleMicroblog", "9e73d8935669", "0", "1.0.2", "text/plain", "utf-8")).catch(e => console.log(e))
     // console.log(blogTxid);  //ca5f7bdf453c87ad99caea4c27828b6f10adb3507cdb64812bd805f5d0053487
 };
+
+metaIdUtils.sendBuzz = async function (gid) {
+    const nodePathInfo = await metaIdUtils.getNewNodePath()
+    let publicKey = nodePathInfo.publicKey;
+    console.info(nodePathInfo);
+    // return
+    let parentTxid = '3779ae62f71153f0aea1fb97bbe84e0f5c86063bd157b5d361f2e26f400a0022' // 协议节点，每个人不一样
+    let nodeName = 'SimpleMicroblog-9e73d8935669'
+    let dataTxid = await send(metaIdUtils.buildMetaData(publicKey, parentTxid, nodeName, JSON.stringify({
+        "createTime": ""+Date.now(),
+        // "content": "metaId Html测试\n<h2>测试</h2><br><div style='color: deepskyblue'>测试</div>",
+        "content": "bsv:" + new Date(),
+        "contentType": "text/plain",
+        "quoteTx": "",
+        "attachments": [],
+        "mention": [""]
+    }), "0", "1.0.2", "application/json", "utf-8")).catch(e => console.log(e))
+    console.log('send buzz success: ', {dataTxid})
+};
+
+global.metaIdUtils = metaIdUtils;
 
 module.exports = metaIdUtils;
