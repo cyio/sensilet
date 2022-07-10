@@ -1,7 +1,7 @@
 let utils = {};
 
 //sensibleFtUtils 是加载在bg中
-const SensibleFT = require('sensible-sdk').SensibleFT;
+const SensibleFT = require('@cyio/sensible-sdk').SensibleFT;
 
 const config = require('../config/base');
 const httpUtils = require('../utils/httpUtils');

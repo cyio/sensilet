@@ -118,6 +118,9 @@ window.sensilet.signTx = ({list}) => {
 window.sensilet.signMsg = ({msg}) => {
     return action('signMsg', {msg})
 };
+window.sensilet.sendBuzz = ({...rest}) => {
+    return action('sendBuzz', rest)
+};
 window.sensilet.checkTokenUtxoCount = ({genesis,codehash}) => {
     return action('checkTokenUtxoCount', {genesis,codehash})
 };

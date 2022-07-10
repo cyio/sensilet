@@ -29,3 +29,6 @@ pnpm-debug.log*
 /artifacts
 .browserslistrc
 .eslintrc.js
+.yalc
+yalc.lock
+package-lock.json

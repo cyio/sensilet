@@ -5,7 +5,7 @@ let bg = chrome.extension && chrome.extension.getBackgroundPage();
 if (!bg)
     window.location.reload();
 
-const {API_NET, API_TARGET, Wallet, SensibleApi} = require('sensible-sdk');
+const {API_NET, API_TARGET, Wallet, SensibleApi} = require('@cyio/sensible-sdk');
 const config = require('../config/base');
 
 
@@ -16,7 +16,7 @@ const passwordAesKey = 'SatoWallet#2021#d7t2';
 let mPassword = "";
 let mRootKey = "";
 let mMainAddress = "";
-const sensibleApi = new SensibleApi(config.network, API_TARGET.SENSIBLE, config.sensibleUrl);
+const sensibleApi = new SensibleApi(config.network, API_TARGET.SHOW, config.sensibleUrl);
 
 function getRootKey(fromSeed = false) {
     if (mRootKey)
@@ -49,7 +49,9 @@ function getPrivateKeyObj(path = '/0/0') {
 }
 
 function getOneWallet(wif) {
-    return new Wallet(wif, config.network, config.fee, API_TARGET.SENSIBLE, config.sensibleUrl)
+    return new Wallet(wif, config.network, config.fee, API_TARGET.SENSIBLE, config.sensibleUrl, {
+        useWOC: true
+    })
 }
 
 

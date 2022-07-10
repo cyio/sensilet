@@ -54,12 +54,12 @@ async function send(data) {
     return txid;
 }
 
-async function getNewNodePath() {
+async function getNewNodePath({xpub, parentTxId}) {
     // 应该缓存下来，本地 +1，数据更新不及时
     const url = 'https://api.showmoney.app/serviceapi/api/v1/showService/getPublicKeyForNewNode'
     const para = {
-        xpub: 'xpub6C1RiQdafRycidKtPDAbWic7qZ5Jz94oA8bHoFjHL3JcsGGR8kuGhP8Co1Jf7zaNinyg9wehnDXcx8xgCdg7sx6XFWyL1moBoMSxPLyvjHu',
-        parentTxId: '3779ae62f71153f0aea1fb97bbe84e0f5c86063bd157b5d361f2e26f400a0022',
+        xpub,
+        parentTxId,
         count: 10
     }
     const res = await httpUtils.post(url, { data: JSON.stringify(para) })
@@ -166,23 +166,24 @@ metaIdUtils.createMetaId = async function (gid) {
     // console.log(blogTxid);  //ca5f7bdf453c87ad99caea4c27828b6f10adb3507cdb64812bd805f5d0053487
 };
 
-metaIdUtils.sendBuzz = async function (gid) {
-    const nodePathInfo = await metaIdUtils.getNewNodePath()
-    let publicKey = nodePathInfo.publicKey;
-    console.info(nodePathInfo);
-    // return
-    let parentTxid = '3779ae62f71153f0aea1fb97bbe84e0f5c86063bd157b5d361f2e26f400a0022' // 协议节点，每个人不一样
+// 钱包是否要承载 buzz 数据构造？可以对外暴露一个高级方式
+// 基础功能：3 个必传值：buzzData, parentTxId, newNodePublicKey
+// 高级功能：1 个传值：metadata。外部进行构造
+metaIdUtils.sendBuzz = async function ({buzzData, metadata, parentTxId, newNodePublicKey}) {
+    // const nodePathInfo = await metaIdUtils.getNewNodePath({ xpub, parentTxId })
+    // let publicKey = nodePathInfo.publicKey;
+    console.info(buzzData, parentTxId, newNodePublicKey);
     let nodeName = 'SimpleMicroblog-9e73d8935669'
-    let dataTxid = await send(metaIdUtils.buildMetaData(publicKey, parentTxid, nodeName, JSON.stringify({
-        "createTime": ""+Date.now(),
-        // "content": "metaId Html测试\n<h2>测试</h2><br><div style='color: deepskyblue'>测试</div>",
-        "content": "bsv:" + new Date(),
-        "contentType": "text/plain",
-        "quoteTx": "",
-        "attachments": [],
-        "mention": [""]
-    }), "0", "1.0.2", "application/json", "utf-8")).catch(e => console.log(e))
+    // return;
+    const _metadata = metadata || metaIdUtils.buildMetaData(
+        newNodePublicKey,
+        parentTxId,
+        nodeName,
+        JSON.stringify(buzzData), "0", "1.0.2", "application/json", "utf-8"
+    )
+    let dataTxid = await send(_metadata).catch(e => console.log(e))
     console.log('send buzz success: ', {dataTxid})
+    return dataTxid
 };
 
 global.metaIdUtils = metaIdUtils;

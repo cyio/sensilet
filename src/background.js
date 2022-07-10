@@ -1,6 +1,6 @@
 const responseHandlers = new Map();
 const eventHandlers = {};
-const sensibleSdk = require("sensible-sdk");
+const sensibleSdk = require("@cyio/sensible-sdk");
 
 require('./utils/globalUtils')
 require('./config/errorCode')
@@ -8,6 +8,7 @@ const config = require('./config/base')
 const walletManager = require("./manager/WalletManager");
 const tokenManager = require("./manager/tokenManager");
 const connectManager = require('./manager/ConnectManager');
+const metaIdUtils = require('./utils/metaIdUtils.js');
 
 const indexedDBUtils = require('./utils/IndexedDBUtils');
 indexedDBUtils.link();
@@ -162,6 +163,24 @@ async function handleGetVersion(message, sender, sendResponse) {
         result: "success", data: {
             version: config.version,
             versionCode: config.versionCode,
+        }, id: message.data.id
+    })
+}
+
+async function handleSendBuzz(message, sender, sendResponse) {
+    console.log('message-1', message)
+    const rest = message.data.params
+    if (!rest.buzzData) {
+        return sendResponse({
+            result: "fail",
+            id: message.data.id,
+            msg: "buzz content is invalid: blank"
+        });
+    }
+    const txId = await metaIdUtils.sendBuzz(rest)
+    sendResponse({
+        result: "success", data: {
+            txId
         }, id: message.data.id
     })
 }
@@ -405,6 +424,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             createHandler(message, sender, sendResponse, handleGetNetwork);
         } else if (message.data.method === 'isHDAccount') {
             createHandler(message, sender, sendResponse, handleIsHDAccount);
+        } else if (message.data.method === 'sendBuzz') {
+            createHandler(message, sender, sendResponse, handleSendBuzz);
         } else {
             createHandler(message, sender, sendResponse, launchPopup);
         }
