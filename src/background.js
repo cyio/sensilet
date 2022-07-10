@@ -170,11 +170,11 @@ async function handleGetVersion(message, sender, sendResponse) {
 async function handleSendBuzz(message, sender, sendResponse) {
     console.log('message-1', message)
     const rest = message.data.params
-    if (!rest.buzzData) {
+    if (!rest.metadata) {
         return sendResponse({
             result: "fail",
             id: message.data.id,
-            msg: "buzz content is invalid: blank"
+            msg: "metadata is invalid"
         });
     }
     const txId = await metaIdUtils.sendBuzz(rest)

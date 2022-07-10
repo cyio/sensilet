@@ -54,20 +54,6 @@ async function send(data) {
     return txid;
 }
 
-async function getNewNodePath({xpub, parentTxId}) {
-    // 应该缓存下来，本地 +1，数据更新不及时
-    const url = 'https://api.showmoney.app/serviceapi/api/v1/showService/getPublicKeyForNewNode'
-    const para = {
-        xpub,
-        parentTxId,
-        count: 10
-    }
-    const res = await httpUtils.post(url, { data: JSON.stringify(para) })
-    return res.result.data[0]
-}
-
-metaIdUtils.getNewNodePath = getNewNodePath;
-
 function readFile(path){
     return new  Promise(((resolve, reject) => {
         require('fs').readFile(require('path').resolve('./')+path,'binary',function(err,data){
@@ -169,19 +155,9 @@ metaIdUtils.createMetaId = async function (gid) {
 // 钱包是否要承载 buzz 数据构造？可以对外暴露一个高级方式
 // 基础功能：3 个必传值：buzzData, parentTxId, newNodePublicKey
 // 高级功能：1 个传值：metadata。外部进行构造
-metaIdUtils.sendBuzz = async function ({buzzData, metadata, parentTxId, newNodePublicKey}) {
-    // const nodePathInfo = await metaIdUtils.getNewNodePath({ xpub, parentTxId })
-    // let publicKey = nodePathInfo.publicKey;
-    console.info(buzzData, parentTxId, newNodePublicKey);
-    let nodeName = 'SimpleMicroblog-9e73d8935669'
-    // return;
-    const _metadata = metadata || metaIdUtils.buildMetaData(
-        newNodePublicKey,
-        parentTxId,
-        nodeName,
-        JSON.stringify(buzzData), "0", "1.0.2", "application/json", "utf-8"
-    )
-    let dataTxid = await send(_metadata).catch(e => console.log(e))
+metaIdUtils.sendBuzz = async function ({metadata}) {
+    console.info(metadata);
+    let dataTxid = await send(metadata).catch(e => console.log(e))
     console.log('send buzz success: ', {dataTxid})
     return dataTxid
 };
