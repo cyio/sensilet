@@ -5,7 +5,7 @@ let bg = chrome.extension && chrome.extension.getBackgroundPage();
 if (!bg)
     window.location.reload();
 
-const {API_NET, API_TARGET, Wallet, SensibleApi} = require('@cyio/sensible-sdk');
+const {API_NET, API_TARGET, Wallet, SensibleApi} = require('sensible-sdk');
 const config = require('../config/base');
 
 
@@ -49,9 +49,7 @@ function getPrivateKeyObj(path = '/0/0') {
 }
 
 function getOneWallet(wif) {
-    return new Wallet(wif, config.network, config.fee, API_TARGET.SENSIBLE, config.sensibleUrl, {
-        useWOC: true
-    })
+    return new Wallet(wif, config.network, config.fee, API_TARGET.SHOW, config.sensibleUrl)
 }
 
 

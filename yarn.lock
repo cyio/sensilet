@@ -970,16 +970,6 @@
   resolved "https://registry.npm.taobao.org/@ctrl/tinycolor/download/@ctrl/tinycolor-3.4.0.tgz?cache=0&sync_timestamp=1612895880147&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40ctrl%2Ftinycolor%2Fdownload%2F%40ctrl%2Ftinycolor-3.4.0.tgz#c3c5ae543c897caa9c2a68630bed355be5f9990f"
   integrity sha1-w8WuVDyJfKqcKmhjC+01W+X5mQ8=
 
-"@cyio/sensible-sdk@^7.4.1":
-  version "7.4.1"
-  resolved "https://registry.npmmirror.com/@cyio/sensible-sdk/-/sensible-sdk-7.4.1.tgz#c08e05ba99315d2d270d129d729e5d2062787158"
-  integrity sha512-Dt8hsBAZGY3wQCvRcYgJTVfMNTwJoK9eUOzKz3N+SKYup5xb6XHvKmAEQrn408CjWCM/hV9dcXAIfA7ePL9twg==
-  dependencies:
-    bsv "1.5.6"
-    minimist "1.2.5"
-    request "^2.88.2"
-    scryptlib "^0.4.6"
-
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.nlark.com/@hapi/address/download/@hapi/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -7509,6 +7499,16 @@ send@0.17.1:
     on-finished "~2.3.0"
     range-parser "~1.2.1"
     statuses "~1.5.0"
+
+sensible-sdk@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.npmmirror.com/sensible-sdk/-/sensible-sdk-7.4.0.tgz#0c0860aefcaea0edd21170b4583da4f50d438628"
+  integrity sha512-kqO8nr5Rwt/ufBulhB1HHpyZybPfdvB7mmebEibnItmoEJacdJh+N8HsjGyJ3KBR2FlWkzAlQ5Hr2qeSXyMg5g==
+  dependencies:
+    bsv "1.5.6"
+    minimist "1.2.5"
+    request "^2.88.2"
+    scryptlib "^0.4.6"
 
 serialize-javascript@^4.0.0:
   version "4.0.0"

@@ -9,7 +9,8 @@ let config = {
     debug: false,
     fee: 0.05,
     host: "https://sensilet.com/api",
-    sensibleUrl: "https://api.sensiblequery.com",
+    sensibleUrl: "https://api.sensiblequery.showpay.top",
+    // sensibleUrl: "https://api.sensiblequery.com",
     // sensibleUrl:"https://api.sensiblequery.com/test",
     needMerge:20,
 };
@@ -23,8 +24,8 @@ config.configNetwork = function () {
         config.isTestnet = true;
     } else {
         //主网
-        config.network = "mainnet";
-        config.sensibleUrl = "https://api.sensiblequery.com";
+        // config.network = "mainnet";
+        // config.sensibleUrl = "https://api.sensiblequery.com";
         config.hostFix = ''
         config.isTestnet = false;
     }

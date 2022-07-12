@@ -1,6 +1,6 @@
 const responseHandlers = new Map();
 const eventHandlers = {};
-const sensibleSdk = require("@cyio/sensible-sdk");
+const sensibleSdk = require("sensible-sdk");
 
 require('./utils/globalUtils')
 require('./config/errorCode')

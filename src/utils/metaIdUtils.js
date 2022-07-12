@@ -157,7 +157,7 @@ metaIdUtils.createMetaId = async function (gid) {
 // 高级功能：1 个传值：metadata。外部进行构造
 metaIdUtils.sendBuzz = async function ({metadata}) {
     console.info(metadata);
-    let dataTxid = await send(metadata).catch(e => console.log(e))
+    let dataTxid = await send(metadata).catch(e => console.error(e))
     console.log('send buzz success: ', {dataTxid})
     return dataTxid
 };
