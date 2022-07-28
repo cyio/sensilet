@@ -1,9 +1,9 @@
 {
   "name": "sensilet",
-  "version": "0.1.15",
+  "version": "0.1.17",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
+    "serve": "vue-cli-service build --mode development --watch --no-clean",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },

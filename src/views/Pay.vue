@@ -134,31 +134,41 @@ export default {
 
         return data
     },
-    async mounted() {
+    created() {
         // let op = "";
         // this.fee = await nftManager.sensibleNft.getIssueFee(op);
-        let bsvPrice = (await apiUtils.getBsvPrice()).data
+        Promise.all([walletManager.getBsvBalance()])
+            .then(async ([{total}]) => {
+                this.balance = total;
+                let temp = total;
+                for (let i = 0; i < this.receivers.length; i++) {
+                    temp -= this.receivers[i].amount
+                }
+                this.rest = temp;
 
-        let {total} = await walletManager.getBsvBalance();
-        this.balance = total;
-        let temp = total;
-        for (let i = 0; i < this.receivers.length; i++) {
-            temp -= this.receivers[i].amount
-            this.receivers[i].usd = (this.receivers[i].amount / Math.pow(10, 8) * bsvPrice).toFixed(2);
+                let {fee} = await walletManager.payArray(this.receivers, false).catch(e => {
+                    console.log(e)
+                    return 0
+                });
+                this.fee = fee;
+                this.computePrice()
+            })
 
-        }
-        this.rest = temp;
-
-
-        let {fee} = await walletManager.payArray(this.receivers, false).catch(e => {
-            console.log(e)
-            return 0
-        });
-        this.fee = fee;
-        this.feeUsd = (this.fee / Math.pow(10, 8) * bsvPrice).toFixed(2);
-
+        Promise.any([apiUtils.getBsvPrice(), apiUtils.getBsvPrice2()])
+            .then(value => {
+                this.bsvPrice = value
+                this.computePrice()
+            })
     },
     methods: {
+        computePrice() {
+            const { bsvPrice } = this
+            if (!bsvPrice || this.fee === null) return
+            for (let i = 0; i < this.receivers.length; i++) {
+                this.receivers[i].usd = (this.receivers[i].amount / Math.pow(10, 8) * bsvPrice).toFixed(2);
+            }
+            this.feeUsd = (this.fee / Math.pow(10, 8) * bsvPrice).toFixed(2);
+        },
         cancel() {
             if (this.origin) {
                 chrome.runtime.sendMessage({

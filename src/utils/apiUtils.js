@@ -13,6 +13,10 @@ apiUtils.getBsvPrice = function () {
 
     return httpUtils.get(`${host}/bsv_price`)
 }
+apiUtils.getBsvPrice2 = async function () {
+    const {rate} = await httpUtils.get(`https://api.whatsonchain.com/v1/bsv/main/exchangerate`)
+    return Number(rate)
+}
 apiUtils.getTokenPrice = function (genesis) {
     if (genesis)
         return httpUtils.get(`${host}/token_price/${genesis}`)
